@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Map from './Components/Map.js' 
+import ErrorMessage from './Components/ErrorMessage.js';
 
 
 
@@ -16,15 +17,14 @@ class App extends React.Component {
  
     }
   }  
-
+      
+  
   //functions
 
 
 onErrorClose = () => {
   this.setState({errorAlert : false})
 }
-
-
 
   getLocation = async () => {
       console.log(`button pushed:`);
@@ -38,8 +38,6 @@ onErrorClose = () => {
       let locData = await axios.get(URL); 
       console.log(locData.data);
         this.setState({locationObj: locData.data[0]});
-        console.log(this.State.locationObj);
-
 
         let mapURL= `https://maps.locationiq.com/v3/staticmap?key=$pk.b5c86569d4017c823b239e4acadfb112&center=${this.props.locationObj.lat},${this.props.locationObj.lon}&zoom=9`;
         this.setState({
@@ -48,17 +46,25 @@ onErrorClose = () => {
       }
       catch (error) {
         console.log('there as an error:' , error)
+        this.setState({errorCode:error.message})
+        this.setState({errorAlert:true})
       }
     }
   
   render(){
-    console.log(this.state)
     return (
       <>
     <h1>Where are we going?</h1> 
-    <input onChange={(event) => this.setState({cityName: event.target.value})}>
-    </input>
-    <button onClick ={this.getLocation}>Let's GO!</button>
+    
+    
+   
+      
+        <label></label><input onChange={(event) => this.setState({cityName: event.target.value})}></input>  
+                     
+       <button type = "submit" onClick ={this.getLocation}>Let's GO!</button>
+    
+    
+    
     <h2> City Found:{this.state.locationObj.display_name}</h2>
    
    { this.state.locationObj &&
@@ -67,7 +73,11 @@ onErrorClose = () => {
       locationObj={this.state.locationObj}
     />
    }
-
+<ErrorMessage 
+ errorCode={this.state.errorCode} 
+ errorAlert={this.state.errorAlert}  
+ onErrorClose={this.onErrorClose}
+/>
 
 
 

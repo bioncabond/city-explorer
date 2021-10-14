@@ -1,9 +1,8 @@
-
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 
+
 class Map extends React.Component {
-  
   render() {
     console.log(this.props.mapImg)
     return (
@@ -14,15 +13,14 @@ class Map extends React.Component {
             <Card.Body>
               <Card.Title></Card.Title>
               <Card.Text>
-               </Card.Text>
+                <p>Latitude: {this.props.locationObj.lat}</p>
+                <p>Longitude: {this.props.locationObj.lon}</p>
+              </Card.Text>
             </Card.Body>
           </Card>
         </div>
-
       </>
-
     )
   }
 }
-
 export default Map;

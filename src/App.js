@@ -40,7 +40,7 @@ class App extends React.Component {
       this.setState({ mapImg: mapURL });
       console.log(this.state.mapImg);
 
-      let allWeatherArray = await axios.get(`http://localhost:3001/weather?searchQuery=${this.state.cityName}`);
+      let allWeatherArray = await axios.get(`${process.env.REACT_APP_SERVER}/weather?lat=${this.state.locationObj.lat}&lon=${this.state.locationObj.lon}`);
       this.setState({ weatherData: allWeatherArray.data, showWeather: true });
       console.log(this.state.weatherData);
 

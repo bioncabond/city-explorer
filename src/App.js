@@ -3,6 +3,7 @@ import axios from 'axios';
 import Map from './Components/Map';
 import Weather from './Components/Weather';
 import ErrorMessage from './Components/ErrorMessage';
+import Movies from './Components/Movies';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,7 +15,9 @@ class App extends React.Component {
       errorAlert: false,
       mapImg: '',
       weatherData: [],
-      showWeather: false
+      showWeather: false, 
+      movieArray: [],
+      showMovie: false
 
     }
   }
@@ -40,9 +43,13 @@ class App extends React.Component {
       this.setState({ mapImg: mapURL });
       console.log(this.state.mapImg);
 
-      let allWeatherArray = await axios.get(`${process.env.REACT_APP_SERVER}/weather?lat=${this.state.locationObj.lat}&lon=${this.state.locationObj.lon}`);
+      let allWeatherArray = await axios.get(`http://localhost:3001/weather?lat=${this.state.locationObj.lat}&lon=${this.state.locationObj.lon}`);
       this.setState({ weatherData: allWeatherArray.data, showWeather: true });
       console.log(this.state.weatherData);
+      
+       let allMovieArr = await axios.get(`http://localhost:3001/movies?cityName=${this.state.cityName}`);
+      this.setState({movieArray: allMovieArr.data, showMovie: true});
+      console.log(this.state.movieArray);
 
     }
      
@@ -74,7 +81,22 @@ render(){
           mapImg={this.state.mapImg}
           locationObj={this.state.locationObj}
         />
-      }
+      } 
+
+{
+          this.state.showMovie && this.state.movieArray.map((el) =>
+          <Movies
+          title= {el.original_title}
+          overview= {el.overview}
+          averageVotes= {el.vote_average}
+          totalVotes= {el.vote_count}
+          image_url= {el.image_url}
+          popularity= {el.popularity}
+          releasedOn= {el.release_date}
+         />)
+        } 
+
+
       <ErrorMessage
         errorCode={this.state.errorCode}
         errorAlert={this.state.errorAlert}
